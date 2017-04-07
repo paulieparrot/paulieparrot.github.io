@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>Paulie Parrot Machine</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<style>
+			.keys {
+				height: 100vh;
+				background-image: url("images/main-bg.jpg");
+				background-repeat: no-repeat;
+				background-position: center center;
+				background-attachment: fixed;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover;
+				background-color: rgba(0, 173, 255, 0.6);
+				background-blend-mode: multiply;
+			}
+
+			.key {
+				border: 4px solid black;
+				border-radius: 5px;
+				margin: 1rem;
+				font-size: 1.5rem;
+				padding: 1rem 0.5rem;
+				transition: all 0.05s;
+				text-align: center;
+				color: white;
+				background: rgba(0, 0, 0, 0.4);
+				text-shadow: 0 0 5px black;
+				flex-grow: 1;
+				flex-basis: 0;
+			}
+
+			.playing {
+				transform: scale(1.1);
+				border-color: #c400ff;
+				box-shadow: 0 0 10px #c400ff;
+			}
+
+			kbd.soundkey {
+				display: block;
+				font-size: 32px;
+				background-color: transparent;
+				border-radius: 0px;
+				color: inherit;
+				padding: 0;
+			}
+
+			.sound {
+				font-size: 0.9rem;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: #c400ff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="d-flex align-content-center flex-wrap align-items-center justify-content-center keys">
+			<div class="key p-2" data-key="65" data-bg-image="images/weep.jpg" data-bg-color="#FFFF00">
+				<kbd class="soundkey">A</kbd>
+				<span class="sound">weep</span>
+			</div>
+			<div class="key p-2" data-key="83" data-bg-image="images/weeeep.jpg" data-bg-color="#33FF00">
+				<kbd class="soundkey">S</kbd>
+				<span class="sound">weeeep</span>
+			</div>
+			<div class="key p-2" data-key="68" data-bg-image="images/wooo.jpg" data-bg-color="#9D00FF">
+				<kbd class="soundkey">D</kbd>
+				<span class="sound">wooo</span>
+			</div>
+			<div class="key p-2" data-key="70" data-bg-image="images/wohhh.jpg" data-bg-color="#099FFF">
+				<kbd class="soundkey">F</kbd>
+				<span class="sound">wohhh</span>
+			</div>
+			<div class="key p-2" data-key="71" data-bg-image="images/woddle-e-e-e.jpg" data-bg-color="#FF0000">
+				<kbd class="soundkey">G</kbd>
+				<span class="sound">woddle e e e</span>
+			</div>
+			<div class="key p-2" data-key="72" data-bg-image="images/reff.jpg" data-bg-color="#f442e8">
+				<kbd class="soundkey">H</kbd>
+				<span class="sound">reff</span>
+			</div>
+			<div class="key p-2" data-key="74" data-bg-image="images/wee-u-wee-wee-oo-wee-oo.jpg" data-bg-color="#00f8fc">
+				<kbd class="soundkey">J</kbd>
+				<span class="sound">wee ee, wee-oo x 2</span>
+			</div>
+			<div class="key p-2" data-key="75" data-bg-image="images/roh-ra-re-ra.jpg" data-bg-color="#fcbd00">
+				<kbd class="soundkey">K</kbd>
+				<span class="sound">roh-ra-re-ra</span>
+			</div>
+			<div class="key p-2" data-key="76" data-bg-image="images/wee-wee-wee.jpg" data-bg-color="#c5fc00">
+				<kbd class="soundkey">L</kbd>
+				<span class="sound">wee-wee-wee</span>
+			</div>
+		</div>
+
+		<audio data-key="65" src="sounds/weep.mp3"></audio>
+		<audio data-key="83" src="sounds/weeeep.mp3"></audio>
+		<audio data-key="68" src="sounds/wooo.mp3"></audio>
+		<audio data-key="70" src="sounds/wohhh.mp3"></audio>
+		<audio data-key="71" src="sounds/woddle-e-e-e.mp3"></audio>
+		<audio data-key="72" src="sounds/reff.mp3"></audio>
+		<audio data-key="74" src="sounds/wee-u-wee-wee-oo-wee-oo.mp3"></audio>
+		<audio data-key="75" src="sounds/roh-ra-re-ra.mp3"></audio>
+		<audio data-key="76" src="sounds/wee-wee-wee.mp3"></audio>
+
+		<script>
+			function doSoundImage(e) {
+				const container = document.querySelector('.keys');
+				const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+				const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+				const bg_image = key.getAttribute('data-bg-image');
+				const bg_color = key.getAttribute('data-bg-color');
+
+				if (!audio) {
+					console.log(`No audio associated with the '${e.key}' key`);
+					return; //stop the function from running all together
+				}
+
+				audio.currentTime = 0; //rewind to the start
+				audio.play();
+
+				key.classList.add('playing');
+
+				container.style.backgroundImage = 'url(' + bg_image + ')';
+				container.style.backgroundColor = bg_color;
+
+				setTimeout(() => {
+					container.style.removeProperty('background-image');
+					container.style.removeProperty('background-color');
+				}, 1500);
+			}
+
+			function removeTransition(e) {
+
+				if ('transform' !== e.propertyName) return; //skip it if it's not a transform
+
+				this.classList.remove('playing');
+			}
+
+			const keys = document.querySelectorAll('.key');
+			keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+			window.addEventListener('keydown', doSoundImage);
+		</script>
+	</body>
+
+</html>
